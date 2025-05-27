@@ -17,8 +17,8 @@ jobs:
 
       - name: Configure Git
         run: |
-          git config --global user.name "Jaiwar SyncBot"
-          git config --global user.email "jaiswar@users.noreply.github.com"
+          git config --global user.name "atharva-agi"
+          git config --global user.email "atharva.agi.admission@gmail.com"
 
       - name: Clone Client Repository
         env:
