@@ -18,6 +18,7 @@ export interface ICollege {
   results: string[];
   tabs: string[];
   payment_id: string;
+  index?: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -144,6 +145,15 @@ export interface ChangeHighlightOrderDto {
   highlights: HighlightOrderItem[];
 }
 
+export interface CollegeOrderItem {
+  id: string;
+  index: number;
+}
+
+export interface ChangeCollegeOrderDto {
+  colleges: CollegeOrderItem[];
+}
+
 export interface CreateFestivalDto {
   name: string;
   description: string;
@@ -219,6 +229,14 @@ export const collegeApi = createApi({
       query: (id) => ({
         url: `/${id}`,
         method: HTTP.DELETE,
+      }),
+      invalidatesTags: ["Colleges"],
+    }),
+    changeCollegeOrder: builder.mutation<IResponse, ChangeCollegeOrderDto>({
+      query: (data) => ({
+        url: `/order`,
+        method: HTTP.PATCH,
+        body: data,
       }),
       invalidatesTags: ["Colleges"],
     }),
@@ -557,4 +575,5 @@ export const {
   useAddSectionToHighlightMutation,
   useDeleteCollegeMutation,
   useCreateCollegeMutation,
+  useChangeCollegeOrderMutation,
 } = collegeApi;
