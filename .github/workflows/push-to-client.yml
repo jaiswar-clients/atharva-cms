@@ -3,7 +3,7 @@ name: Push to Client Repository
 on:
   push:
     branches:
-      - main   # or whichever branch you want to trigger from
+      - main
 
 jobs:
   push-to-client:
@@ -13,7 +13,7 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v4
         with:
-          persist-credentials: false   # Important: don't use default GitHub token
+          persist-credentials: false
 
       - name: Configure Git
         run: |
@@ -27,11 +27,11 @@ jobs:
           # Clone the client repo using the PAT
           git clone https://x-access-token:${CLIENT_REPO_PAT}@github.com/atharva-agi/atharva-cms.git
 
-          # Copy files from the source repo to client repo (excluding .git folder)
-          rsync -av --exclude='.git' ./ atharva-cms/
+          # Sync source files to client repo, excluding .git and GitHub Actions workflows
+          rsync -av --exclude='.git' --exclude='.github' ./ atharva-cms/
 
           cd atharva-cms
 
           git add .
           git commit -m "Sync from source repo to client repo" || echo "No changes to commit"
-          git push origin main   # or whichever branch
+          git push origin main
