@@ -136,6 +136,15 @@ export interface IHighlight {
   updatedAt?: string;
 }
 
+export interface IJourney {
+  _id: string;
+  year: string;
+  description: string;
+  image_url?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface HighlightOrderItem {
   id: string;
   index: number;
@@ -185,6 +194,14 @@ export interface CreateCollegeDto {
   carousel_images?: string[];
 }
 
+export interface CreateJourneyDto {
+  year: string;
+  description: string;
+  image_url?: string;
+}
+
+export type UpdateJourneyDto = Partial<CreateJourneyDto>;
+
 export const collegeApi = createApi({
   reducerPath: "college",
   baseQuery: fetchBaseQuery({
@@ -208,6 +225,8 @@ export const collegeApi = createApi({
     "SINGLE_FESTIVAL",
     "Highlights",
     "SINGLE_HIGHLIGHT",
+    "Journeys",
+    "SINGLE_JOURNEY",
   ],
   endpoints: (builder) => ({
     getColleges: builder.query<IResponse<ICollege[]>, void>({
@@ -537,6 +556,46 @@ export const collegeApi = createApi({
       }),
       invalidatesTags: ["Highlights", "SINGLE_HIGHLIGHT", "Sections"],
     }),
+    getJourneys: builder.query<IResponse<IJourney[]>, void>({
+      query: () => ({
+        url: "/journeys",
+        method: HTTP.GET,
+      }),
+      providesTags: ["Journeys"],
+    }),
+    getJourneyById: builder.query<IResponse<IJourney>, string>({
+      query: (id) => ({
+        url: `/journeys/${id}`,
+        method: HTTP.GET,
+      }),
+      providesTags: ["SINGLE_JOURNEY"],
+    }),
+    createJourney: builder.mutation<IResponse<IJourney>, CreateJourneyDto>({
+      query: (data) => ({
+        url: "/journeys",
+        method: HTTP.POST,
+        body: data,
+      }),
+      invalidatesTags: ["Journeys"],
+    }),
+    updateJourney: builder.mutation<
+      IResponse<IJourney>,
+      { id: string; data: UpdateJourneyDto }
+    >({
+      query: ({ id, data }) => ({
+        url: `/journeys/${id}`,
+        method: HTTP.PATCH,
+        body: data,
+      }),
+      invalidatesTags: ["Journeys", "SINGLE_JOURNEY"],
+    }),
+    deleteJourney: builder.mutation<IResponse, string>({
+      query: (id) => ({
+        url: `/journeys/${id}`,
+        method: HTTP.DELETE,
+      }),
+      invalidatesTags: ["Journeys", "SINGLE_JOURNEY"],
+    }),
   }),
 });
 
@@ -576,4 +635,9 @@ export const {
   useDeleteCollegeMutation,
   useCreateCollegeMutation,
   useChangeCollegeOrderMutation,
+  useGetJourneysQuery,
+  useGetJourneyByIdQuery,
+  useCreateJourneyMutation,
+  useUpdateJourneyMutation,
+  useDeleteJourneyMutation,
 } = collegeApi;
