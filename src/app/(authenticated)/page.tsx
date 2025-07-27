@@ -1,11 +1,16 @@
-import React from 'react'
+"use client";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const Page = () => {
-  return (
-    <div>
-      
-    </div>
-  )
-}
+  const router = useRouter();
 
-export default Page
+  useEffect(() => {
+    if (router) {
+      router.push("/colleges");
+    }
+  }, [router]);
+  return null;
+};
+
+export default Page;

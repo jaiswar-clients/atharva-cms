@@ -23,6 +23,15 @@ export interface ICollege {
   updatedAt: string;
 }
 
+export interface INews {
+  _id: string;
+  name: string;
+  image_url: string;
+  link?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface ITab<T = string> {
   _id: string;
   name: string;
@@ -227,6 +236,8 @@ export const collegeApi = createApi({
     "SINGLE_HIGHLIGHT",
     "Journeys",
     "SINGLE_JOURNEY",
+    "News",
+    "SINGLE_NEWS",
   ],
   endpoints: (builder) => ({
     getColleges: builder.query<IResponse<ICollege[]>, void>({
@@ -596,6 +607,43 @@ export const collegeApi = createApi({
       }),
       invalidatesTags: ["Journeys", "SINGLE_JOURNEY"],
     }),
+    getNews: builder.query<IResponse<INews[]>, void>({
+      query: () => ({
+        url: "/news",
+        method: HTTP.GET,
+      }),
+      providesTags: ["News"],
+    }),
+    getNewsById: builder.query<IResponse<INews>, string>({
+      query: (id) => ({
+        url: `/news/${id}`,
+        method: HTTP.GET,
+      }),
+      providesTags: ["SINGLE_NEWS"],
+    }),
+    createNews: builder.mutation<IResponse<INews>, { name: string; image_url?: string; link: string }>({
+      query: (data) => ({
+        url: "/news",
+        method: HTTP.POST,
+        body: data,
+      }),
+      invalidatesTags: ["News"],
+    }),
+    updateNews: builder.mutation<IResponse<INews>, { id: string; data: Partial<{ name: string; image_url?: string; link: string }> }>({
+      query: ({ id, data }) => ({
+        url: `/news/${id}`,
+        method: HTTP.PATCH,
+        body: data,
+      }),
+      invalidatesTags: ["News", "SINGLE_NEWS"],
+    }),
+    deleteNews: builder.mutation<IResponse, string>({
+      query: (id) => ({
+        url: `/news/${id}`,
+        method: HTTP.DELETE,
+      }),
+      invalidatesTags: ["News", "SINGLE_NEWS"],
+    }),
   }),
 });
 
@@ -640,4 +688,9 @@ export const {
   useCreateJourneyMutation,
   useUpdateJourneyMutation,
   useDeleteJourneyMutation,
+  useGetNewsQuery,
+  useGetNewsByIdQuery,
+  useCreateNewsMutation,
+  useUpdateNewsMutation,
+  useDeleteNewsMutation,
 } = collegeApi;

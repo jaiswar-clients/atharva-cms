@@ -16,7 +16,7 @@ import { Avatar, AvatarImage } from "../ui/avatar"
 import { AvatarFallback } from "@radix-ui/react-avatar"
 import { usePathname } from "next/navigation"
 import { useAppSelector } from "@/redux/hook"
-import { Bell, Building2, Calendar, File, MapPin, Star } from "lucide-react"
+import { Building2, Calendar, File, MapPin, Newspaper, Star } from "lucide-react"
 
 // Menu items.
 const items = [
@@ -31,9 +31,9 @@ const items = [
         icon: File,
     },
     {
-        title: "Notice",
-        url: "notices",
-        icon: Bell,
+        title: "News",
+        url: "news",
+        icon: Newspaper,
     },
     {
         title: "Events",
@@ -99,7 +99,7 @@ export function AppSidebar() {
             <SidebarFooter>
                 <div className="flex gap-2 cursor-pointer">
                     <Avatar className="w-16 h-16">
-                        <AvatarImage src="https://github.com/shadcn.png" />
+                        <AvatarImage src="https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png" />
                         <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                     <div className="">
