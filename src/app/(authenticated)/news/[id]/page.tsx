@@ -1,33 +1,11 @@
-"use client"
 import React from 'react'
-import Typography from '@/components/ui/typography'
-import { Button } from '@/components/ui/button'
-import { ArrowLeft } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import NewsDetail from '@/components/News/NewsDetail'
+import EditNewsPageClient from './EditNewsPageClient'
 
-interface IProps {
-    params: {
-        id: string
-    }
+export default async function EditNewsPage({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { id } = await params
+  return <EditNewsPageClient id={id} />
 }
-
-const EditNewsPage = ({ params }: IProps) => {
-    const router = useRouter()
-
-    return (
-        <div className="space-y-6">
-            <div className="flex items-center gap-4">
-                <Button variant="outline" onClick={() => router.back()}>
-                    <ArrowLeft size={20} />
-                    <span>Back</span>
-                </Button>
-                <Typography variant="h1">Edit News</Typography>
-            </div>
-
-            <NewsDetail mode="edit" id={params.id} />
-        </div>
-    )
-}
-
-export default EditNewsPage 
