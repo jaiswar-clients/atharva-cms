@@ -9,6 +9,7 @@ interface IProps {
 const TabSections = ({ tabId, collegeId }: IProps) => {
     return (
         <SectionsList 
+            key={tabId}
             parentId={tabId}
             entityType="tab"
             collegeId={collegeId}

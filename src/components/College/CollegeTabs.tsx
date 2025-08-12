@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { ITab, useAddTabToCollegeMutation, useDeleteTabByIdMutation, useGetTabsByCollegeIdQuery, useUpdateTabByIdMutation } from '@/redux/api/college'
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
     Carousel,
     CarouselContent,
@@ -127,88 +127,113 @@ const CollegeTabs = ({ collegeId }: IProps) => {
 
     return (
         <div>
-            <div className="flex justify-between items-center">
-                <Typography variant="h2" className="!text-xl !font-semibold tracking-tight">Tabs</Typography>
-                <Button onClick={() => setIsAdding(prev => !prev)} size="sm" variant={isAdding ? 'destructive' : 'default'} className="gap-2">
+            <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                    <CardTitle>Tabs</CardTitle>
+                    <Button onClick={() => setIsAdding(prev => !prev)} size="sm" variant={isAdding ? 'destructive' : 'default'} className="gap-2">
+                        {isAdding ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+                        <span>{isAdding ? 'Cancel' : 'Add Tab'}</span>
+                    </Button>
+                </CardHeader>
+                <CardContent>
                     {
-                        isAdding ? (
-                            <X className="h-4 w-4" />
+                        data?.data?.length ? (
+                            <Carousel opts={{ align: "start" }} className="w-full">
+                                <CarouselContent>
+                                    {data.data.map((tab, index) => (
+                                        <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                                            <div className="p-1 relative">
+                                                <Card className={cn(selectedTab?._id === tab._id ? 'border-primary border-2' : 'border-border', 'cursor-pointer transition-colors')} onClick={() => setSelectedTab(tab)}>
+                                                    <CardContent className="flex aspect-auto items-center justify-center p-6">
+                                                        <span className="text-base font-medium">{trimText(tab.name)}</span>
+                                                    </CardContent>
+                                                </Card>
+                                                <div className="flex justify-center items-center size-7 absolute bottom-2 right-2 rounded-full bg-destructive hover:bg-destructive/90 transition-colors cursor-pointer top-1" onClick={() => setDeleteModal({ show: true, tabId: tab._id, name: tab.name })}>
+                                                    <X className='text-white h-3 w-3' />
+                                                </div>
+                                            </div>
+                                        </CarouselItem>
+                                    ))}
+                                </CarouselContent>
+                                <CarouselPrevious className="left-2" type='button' />
+                                <CarouselNext className="right-2" type='button' />
+                            </Carousel>
                         ) : (
-                            <Plus className="h-4 w-4" />
+                            <div className="flex justify-center items-center h-full">
+                                <Typography variant="h3" className='font-medium text-muted-foreground'>No tabs found, please add a tab</Typography>
+                            </div>
                         )
                     }
-                    <span>{isAdding ? 'Cancel' : 'Add Tab'}</span>
-                </Button>
-            </div>
-            <br />
-            {
-                data?.data?.length ? (
-                    <Carousel
-                        opts={{
-                            align: "start",
-                        }}
-                        className="w-full"
-                    >
-                        <CarouselContent>
-                            {data.data.map((tab, index) => (
-                                <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-                                    <div className="p-1 relative">
-                                        <Card className={cn(selectedTab?._id === tab._id ? 'border-primary border-2' : 'border-border', 'cursor-pointer transition-colors')} onClick={() => setSelectedTab(tab)}>
-                                            <CardContent className="flex aspect-auto items-center justify-center p-6">
-                                                <span className="text-base font-medium">{trimText(tab.name)}</span>
-                                            </CardContent>
-                                        </Card>
-
-                                        <div className="flex justify-center items-center size-7 absolute bottom-2 right-2 rounded-full bg-destructive hover:bg-destructive/90 transition-colors cursor-pointer top-1" onClick={() => setDeleteModal({ show: true, tabId: tab._id, name: tab.name })}>
-                                            <X className='text-white h-3 w-3' />
-                                        </div>
-
-
-                                    </div>
-                                </CarouselItem>
-                            ))}
-                        </CarouselContent>
-                        <CarouselPrevious className="left-2" type='button' />
-                        <CarouselNext className="right-2" type='button' />
-                    </Carousel>
-                ) : (
-                    <div className="flex justify-center items-center h-full">
-                        <Typography variant="h3" className='font-medium text-muted-foreground'>No tabs found, please add a tab</Typography>
-                    </div>
-                )
-            }
+                </CardContent>
+            </Card>
 
             <br />
-            {
-                selectedTab && !isAdding && (
-                    <div className="flex justify-between items-center">
-                        <Typography variant="h3" className='font-medium tracking-tight'>{selectedTab.name}</Typography>
-                        {
-                            !isEditing ? (
-                                <Button onClick={() => setIsEditing(true)} size="sm" className="gap-2">
-                                    <Edit className="h-4 w-4" />
-                                    <span>Edit</span>
+            {selectedTab && !isAdding && (
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between">
+                        <CardTitle>{selectedTab.name}</CardTitle>
+                        {!isEditing ? (
+                            <Button onClick={() => setIsEditing(true)} size="sm" className="gap-2">
+                                <Edit className="h-4 w-4" />
+                                <span>Edit</span>
+                            </Button>
+                        ) : (
+                            <div className="flex gap-2">
+                                <Button variant="outline" size="sm" onClick={() => setIsEditing(false)} className="gap-2">
+                                    <X className="h-4 w-4" />
+                                    <span>Cancel</span>
                                 </Button>
-                            ) : (
-                                <div className="flex gap-2">
-                                    <Button variant="outline" size="sm" onClick={() => setIsEditing(false)} className="gap-2">
-                                        <X className="h-4 w-4" />
-                                        <span>Cancel</span>
-                                    </Button>
-                                    <Button onClick={form.handleSubmit(onUpdate)} size="sm" className="gap-2" loading={{ isLoading: updating }} disabled={!form.formState.isDirty || updating} >
-                                        <Check className="h-4 w-4" />
-                                        <span>Update</span>
-                                    </Button>
-                                </div>
-                            )
-                        }
-                    </div>
-                )
-            }
-            {
-                isAdding && (
-                    <div className="flex justify-between items-center">
-                        <Typography variant="h3" className='font-medium tracking-tight'>Add New Tab</Typography>
+                                <Button onClick={form.handleSubmit(onUpdate)} size="sm" className="gap-2" loading={{ isLoading: updating }} disabled={!form.formState.isDirty || updating} >
+                                    <Check className="h-4 w-4" />
+                                    <span>Update</span>
+                                </Button>
+                            </div>
+                        )}
+                    </CardHeader>
+                    <CardContent>
+                        <Form {...form}>
+                            <form className="grid grid-cols-1 gap-6 p-2">
+                                <FormField
+                                    control={form.control}
+                                    name="name"
+                                    render={({ field }) => (
+                                        <FormItem className="w-full md:w-1/2">
+                                            <FormLabel>Name</FormLabel>
+                                            <FormControl>
+                                                <Input type="text" disabled={!isEditing && !isAdding} placeholder="Enter tab name" {...field} />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="description"
+                                    render={({ field }) => (
+                                        <FormItem className="w-full">
+                                            <FormLabel>Description</FormLabel>
+                                            <FormControl>
+                                                <MDXEditor
+                                                    editable={isEditing || isAdding}
+                                                    markdown={field.value || ''}
+                                                    onChange={(markdown) => {
+                                                        field.onChange(markdown);
+                                                    }}
+                                                    className='max-h-[400px] overflow-y-auto'
+                                                />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
+                            </form>
+                        </Form>
+                    </CardContent>
+                </Card>
+            )}
+
+            {isAdding && (
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between">
+                        <CardTitle>Add New Tab</CardTitle>
                         <div className="flex gap-2">
                             <Button variant="outline" size="sm" onClick={() => setIsAdding(false)} className="gap-2">
                                 <X className="h-4 w-4" />
@@ -219,56 +244,46 @@ const CollegeTabs = ({ collegeId }: IProps) => {
                                 <span>Add</span>
                             </Button>
                         </div>
-                    </div>
-                )
-            }
-
-            <Form {...form}>
-                <form className="grid grid-cols-1 gap-6 p-2">
-                    <FormField
-                        control={form.control}
-                        name="name"
-                        render={({ field }) => (
-                            <FormItem className="w-full md:w-1/2">
-                                <FormLabel>
-                                    Name
-                                </FormLabel>
-                                <FormControl>
-                                    <Input
-                                        type="text"
-                                        disabled={!isEditing && !isAdding}
-                                        placeholder="Enter tab name"
-                                        {...field}
-                                    />
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="description"
-                        render={({ field }) => (
-                            <FormItem className="w-full">
-                                <FormLabel>
-                                    Description
-                                </FormLabel>
-                                <FormControl>
-                                    <MDXEditor
-                                        editable={isEditing || isAdding}
-                                        markdown={field.value || ''}
-                                        onChange={(markdown) => {
-                                            field.onChange(markdown);
-                                        }}
-                                        className='max-h-[400px] overflow-y-auto'
-                                    />
-
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    />
-                </form>
-            </Form>
+                    </CardHeader>
+                    <CardContent>
+                        <Form {...form}>
+                            <form className="grid grid-cols-1 gap-6 p-2">
+                                <FormField
+                                    control={form.control}
+                                    name="name"
+                                    render={({ field }) => (
+                                        <FormItem className="w-full md:w-1/2">
+                                            <FormLabel>Name</FormLabel>
+                                            <FormControl>
+                                                <Input type="text" disabled={!isEditing && !isAdding} placeholder="Enter tab name" {...field} />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="description"
+                                    render={({ field }) => (
+                                        <FormItem className="w-full">
+                                            <FormLabel>Description</FormLabel>
+                                            <FormControl>
+                                                <MDXEditor
+                                                    editable={isEditing || isAdding}
+                                                    markdown={field.value || ''}
+                                                    onChange={(markdown) => {
+                                                        field.onChange(markdown);
+                                                    }}
+                                                    className='max-h-[400px] overflow-y-auto'
+                                                />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
+                            </form>
+                        </Form>
+                    </CardContent>
+                </Card>
+            )}
 
             <Dialog open={deleteModal.show} onOpenChange={() => setDeleteModal({ show: false, tabId: '', name: '' })}>
                 <DialogContent>
@@ -289,15 +304,18 @@ const CollegeTabs = ({ collegeId }: IProps) => {
                 </DialogContent>
             </Dialog>
             <br />
-            {/* Sections */}
-
-            {
-                selectedTab && (
-                    <div className="p-2">
-                        <TabSections tabId={selectedTab._id} collegeId={collegeId} />
-                    </div>
-                )
-            }
+            {selectedTab && (
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Sections for {selectedTab.name}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="p-2">
+                            <TabSections tabId={selectedTab._id} collegeId={collegeId} />
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
 
         </div >
     )

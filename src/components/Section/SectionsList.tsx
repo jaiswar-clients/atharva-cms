@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect,  useState } from 'react'
 import { ISection, useAddSectionToTabMutation, useDeleteSectionByIdMutation, useGetSectionsByTabIdQuery } from '@/redux/api/college'
 import { Button } from '../ui/button'
 import { Plus, X } from 'lucide-react'
@@ -28,17 +28,28 @@ const SectionsList = ({ parentId, entityType, collegeId }: ISectionsListProps) =
 
     // For now, we're using the tab API as that's what's available
     // This would need to be updated if different APIs are implemented for different entity types
-    const { data, refetch } = useGetSectionsByTabIdQuery(parentId)
+    const { data, refetch } = useGetSectionsByTabIdQuery(parentId, { refetchOnMountOrArgChange: true })
     const [addSectionToTabApi, { isLoading: isAdding }] = useAddSectionToTabMutation()
     const [deleteSectionByIdApi] = useDeleteSectionByIdMutation()
 
+    // Reset selection on parent change
     useEffect(() => {
-        if (!selectedSection) {
-            if (data?.data?.length) {
-                setSelectedSection(data.data[0])
-            }
+        setSelectedSection(null)
+        setNewSectionName('')
+    }, [parentId])
+
+    // When data changes, ensure we have a valid selection for the current parent
+    useEffect(() => {
+        const sections = data?.data ?? []
+        if (!sections.length) {
+            setSelectedSection(null)
+            return
         }
-    }, [data])
+        const selectionExistsInList = selectedSection ? sections.some(s => s._id === selectedSection._id) : false
+        if (!selectedSection || !selectionExistsInList) {
+            setSelectedSection(sections[0])
+        }
+    }, [data?.data, parentId, selectedSection])
 
     const onAddSection = async () => {
         try {
@@ -143,6 +154,7 @@ const SectionsList = ({ parentId, entityType, collegeId }: ISectionsListProps) =
             <div className="mt-6">
                 {selectedSection && (
                     <SectionEditor 
+                        key={`${parentId}-${selectedSection._id}`}
                         section={selectedSection}
                         entityId={collegeId}
                         entityType={entityType}
