@@ -122,19 +122,19 @@ const CollegeTabs = ({ collegeId }: IProps) => {
         }
     }
 
-    if (isLoading) return <div>Loading...</div>
-    if (!data?.data) return <div>No tabs found</div>
+    if (isLoading) return <div className="text-sm text-muted-foreground">Loading...</div>
+    if (!data?.data) return <div className="text-sm text-muted-foreground">No tabs found</div>
 
     return (
         <div>
             <div className="flex justify-between items-center">
-                <Typography variant="h2">Tabs</Typography>
-                <Button onClick={() => setIsAdding(prev => !prev)} className={`${isAdding ? 'bg-red-500' : 'bg-green-500'}`}>
+                <Typography variant="h2" className="!text-xl !font-semibold tracking-tight">Tabs</Typography>
+                <Button onClick={() => setIsAdding(prev => !prev)} size="sm" variant={isAdding ? 'destructive' : 'default'} className="gap-2">
                     {
                         isAdding ? (
-                            <X size={20} />
+                            <X className="h-4 w-4" />
                         ) : (
-                            <Plus size={20} />
+                            <Plus className="h-4 w-4" />
                         )
                     }
                     <span>{isAdding ? 'Cancel' : 'Add Tab'}</span>
@@ -153,14 +153,14 @@ const CollegeTabs = ({ collegeId }: IProps) => {
                             {data.data.map((tab, index) => (
                                 <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
                                     <div className="p-1 relative">
-                                        <Card className={cn(selectedTab?._id === tab._id ? 'border-primary border-2' : 'border-gray-200', 'cursor-pointer')} onClick={() => setSelectedTab(tab)}>
+                                        <Card className={cn(selectedTab?._id === tab._id ? 'border-primary border-2' : 'border-border', 'cursor-pointer transition-colors')} onClick={() => setSelectedTab(tab)}>
                                             <CardContent className="flex aspect-auto items-center justify-center p-6">
-                                                <span className="text-xl font-semibold">{trimText(tab.name)}</span>
+                                                <span className="text-base font-medium">{trimText(tab.name)}</span>
                                             </CardContent>
                                         </Card>
 
-                                        <div className="flex justify-center items-center size-8 absolute bottom-2 right-2  rounded-full bg-destructive hover:bg-destructive/80 transition-all duration-300 cursor-pointer top-1" onClick={() => setDeleteModal({ show: true, tabId: tab._id, name: tab.name })}>
-                                            <X size={16} className='text-white' />
+                                        <div className="flex justify-center items-center size-7 absolute bottom-2 right-2 rounded-full bg-destructive hover:bg-destructive/90 transition-colors cursor-pointer top-1" onClick={() => setDeleteModal({ show: true, tabId: tab._id, name: tab.name })}>
+                                            <X className='text-white h-3 w-3' />
                                         </div>
 
 
@@ -173,7 +173,7 @@ const CollegeTabs = ({ collegeId }: IProps) => {
                     </Carousel>
                 ) : (
                     <div className="flex justify-center items-center h-full">
-                        <Typography variant="h3" className='font-semibold'>No tabs found, please add a tab</Typography>
+                        <Typography variant="h3" className='font-medium text-muted-foreground'>No tabs found, please add a tab</Typography>
                     </div>
                 )
             }
@@ -182,21 +182,21 @@ const CollegeTabs = ({ collegeId }: IProps) => {
             {
                 selectedTab && !isAdding && (
                     <div className="flex justify-between items-center">
-                        <Typography variant="h3" className='font-semibold'>{selectedTab.name}</Typography>
+                        <Typography variant="h3" className='font-medium tracking-tight'>{selectedTab.name}</Typography>
                         {
                             !isEditing ? (
-                                <Button onClick={() => setIsEditing(true)}>
-                                    <Edit size={20} />
+                                <Button onClick={() => setIsEditing(true)} size="sm" className="gap-2">
+                                    <Edit className="h-4 w-4" />
                                     <span>Edit</span>
                                 </Button>
                             ) : (
                                 <div className="flex gap-2">
-                                    <Button variant="outline" onClick={() => setIsEditing(false)}>
-                                        <X size={20} />
+                                    <Button variant="outline" size="sm" onClick={() => setIsEditing(false)} className="gap-2">
+                                        <X className="h-4 w-4" />
                                         <span>Cancel</span>
                                     </Button>
-                                    <Button onClick={form.handleSubmit(onUpdate)} loading={{ isLoading: updating }} disabled={!form.formState.isDirty || updating} >
-                                        <Check size={20} />
+                                    <Button onClick={form.handleSubmit(onUpdate)} size="sm" className="gap-2" loading={{ isLoading: updating }} disabled={!form.formState.isDirty || updating} >
+                                        <Check className="h-4 w-4" />
                                         <span>Update</span>
                                     </Button>
                                 </div>
@@ -208,14 +208,14 @@ const CollegeTabs = ({ collegeId }: IProps) => {
             {
                 isAdding && (
                     <div className="flex justify-between items-center">
-                        <Typography variant="h3" className='font-semibold'>Add New Tab</Typography>
+                        <Typography variant="h3" className='font-medium tracking-tight'>Add New Tab</Typography>
                         <div className="flex gap-2">
-                            <Button variant="outline" onClick={() => setIsAdding(false)}>
-                                <X size={20} />
+                            <Button variant="outline" size="sm" onClick={() => setIsAdding(false)} className="gap-2">
+                                <X className="h-4 w-4" />
                                 <span>Cancel</span>
                             </Button>
-                            <Button onClick={form.handleSubmit(onCreate)} loading={{ isLoading: adding }} disabled={!form.formState.isDirty || adding} >
-                                <Plus size={20} />
+                            <Button onClick={form.handleSubmit(onCreate)} size="sm" className="gap-2" loading={{ isLoading: adding }} disabled={!form.formState.isDirty || adding} >
+                                <Plus className="h-4 w-4" />
                                 <span>Add</span>
                             </Button>
                         </div>

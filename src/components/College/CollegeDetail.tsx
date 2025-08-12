@@ -130,28 +130,30 @@ const CollegeDetail = ({ id }: IProps) => {
             <ImageViewDialog />
 
             <div className="flex flex-row justify-between items-center">
-                <div className="flex flex-row items-center gap-2">
+                <div className="flex flex-row items-center gap-3">
                     <Image
                         src={form.watch('logo') || "/placeholder.svg"}
                         alt={`${form.watch('name')} logo`}
-                        width={60}
-                        height={60}
+                        width={52}
+                        height={52}
                     />
-                    <Typography className="ml-2" variant="h2">{form.watch('name')}</Typography>
+                    <Typography variant="h2" className="ml-1 !text-xl !font-semibold tracking-tight">
+                        {form.watch('name')}
+                    </Typography>
                 </div>
                 {
                     !isEditing ? (
-                        <Button onClick={() => setIsEditing(true)}>
-                            <Pencil size={20} />
+                        <Button onClick={() => setIsEditing(true)} size="sm" className="gap-2">
+                            <Pencil className="h-4 w-4" />
                             <span>Edit</span>
                         </Button>
                     ) : (
                         <div className="flex gap-2">
-                            <Button variant="outline" onClick={() => setIsEditing(false)}>
-                                <X size={20} />
+                            <Button variant="outline" size="sm" onClick={() => setIsEditing(false)} className="gap-2">
+                                <X className="h-4 w-4" />
                                 <span>Cancel</span>
                             </Button>
-                            <Button onClick={form.handleSubmit(onSubmit)} loading={{ isLoading: updating }} disabled={!form.formState.isDirty || updating} >
+                            <Button onClick={form.handleSubmit(onSubmit)} size="sm" className="gap-2" loading={{ isLoading: updating }} disabled={!form.formState.isDirty || updating} >
                                 <span>Save</span>
                             </Button>
                         </div>
@@ -172,14 +174,11 @@ const CollegeDetail = ({ id }: IProps) => {
                                             Logo
                                         </FormLabel>
                                         <br />
-                                        {!isEditing && (
-                                            <Button
-                                                type='button'
-                                                size="sm"
-                                                onClick={() => setViewImageUrl(field.value)}
-                                            >
-                                                <Eye size={16} />
-                                                <span className="ml-2">View</span>
+                                        {!isEditing && field.value && (
+                                            <Button type='button' size="sm" variant="outline" className="gap-2"
+                                                onClick={() => setViewImageUrl(field.value)}>
+                                                <Eye className="h-4 w-4" />
+                                                <span>View</span>
                                             </Button>
                                         )}
                                     </div>
@@ -207,14 +206,11 @@ const CollegeDetail = ({ id }: IProps) => {
                                             Banner Image
                                         </FormLabel>
                                         <br />
-                                        {!isEditing && (
-                                            <Button
-                                                type='button'
-                                                size="sm"
-                                                onClick={() => setViewImageUrl(field.value)}
-                                            >
-                                                <Eye size={16} />
-                                                <span className="ml-2">View</span>
+                                        {!isEditing && field.value && (
+                                            <Button type='button' size="sm" variant="outline" className="gap-2"
+                                                onClick={() => setViewImageUrl(field.value)}>
+                                                <Eye className="h-4 w-4" />
+                                                <span>View</span>
                                             </Button>
                                         )}
                                     </div>
@@ -308,8 +304,8 @@ const CollegeDetail = ({ id }: IProps) => {
                                                         />
                                                         {
                                                             isEditing && (
-                                                                <div className="flex justify-center items-center size-8 absolute bottom-2 right-2  rounded-full bg-destructive hover:bg-destructive/80 transition-all duration-300 cursor-pointer top-1" onClick={() => removeCarouselImage(index)}>
-                                                                    <X size={16} className='text-white' />
+                                                                <div className="flex justify-center items-center size-7 absolute bottom-2 right-2 rounded-full bg-destructive hover:bg-destructive/90 transition-colors cursor-pointer" onClick={() => removeCarouselImage(index)}>
+                                                                    <X className='text-white h-3 w-3' />
                                                                 </div>
                                                             )
                                                         }
@@ -339,7 +335,7 @@ const CollegeDetail = ({ id }: IProps) => {
                             </DialogHeader>
                             <div className="space-y-4">
                                 {isEditing && (
-                                    <div className="flex gap-4">
+                                    <div className="flex gap-3">
                                         <Input
                                             type="file"
                                             multiple

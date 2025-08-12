@@ -13,20 +13,21 @@ const College = () => {
     const [showOrderModal, setShowOrderModal] = useState(false)
 
     return (
-        <div>
-            <div className="flex flex-row justify-between items-center">
-                <Typography variant="h1" className='text-2xl'>Colleges</Typography>
+        <div className="space-y-4">
+            <div className="flex items-center justify-between">
+                <Typography variant="h1" className='text-2xl !font-semibold tracking-tight'>Colleges</Typography>
                 <div className="flex gap-2">
-                    <Button 
+                    <Button
                         onClick={() => setShowOrderModal(true)}
                         variant="outline"
-                        className="border-blue-500 text-blue-700 hover:bg-blue-50"
+                        size="sm"
+                        className="gap-2"
                     >
-                        <ArrowUpDown className="h-4 w-4 mr-2" />
-                        Change Order
+                        <ArrowUpDown className="h-4 w-4" />
+                        <span className="hidden md:inline">Change Order</span>
                     </Button>
-                    <Button onClick={() => setCreateModalOpen(true)}>
-                        <Plus size={20} />
+                    <Button onClick={() => setCreateModalOpen(true)} size="sm" className="gap-2">
+                        <Plus className="h-4 w-4" />
                         <span>Add College</span>
                     </Button>
                 </div>
@@ -38,7 +39,7 @@ const College = () => {
                 onSetShowOrderModal={setShowOrderModal}
             />
             
-            <CreateCollegeModal 
+            <CreateCollegeModal
                 open={createModalOpen} 
                 onOpenChange={setCreateModalOpen} 
             />

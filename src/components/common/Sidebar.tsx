@@ -8,6 +8,7 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    SidebarSeparator,
 } from "@/components/ui/sidebar"
 import Typography from "../ui/typography"
 import Link from "next/link"
@@ -62,49 +63,44 @@ export function AppSidebar() {
     }
 
     return (
-        <Sidebar>
-            <SidebarHeader className="flex flex-row items-center justify-center">
-                <Image src="/images/icon.png" width={100} height={50} alt="logo" />
-                <Typography variant="h3" className="!font-bold">Admin Dashboard</Typography>
+        <Sidebar variant="floating" collapsible="icon" className="backdrop-blur supports-[backdrop-filter]:bg-sidebar/80">
+            <SidebarHeader className="flex items-center gap-2 px-3 py-2">
+                <Image src="/images/icon.png" width={28} height={28} alt="logo" className="rounded" />
+                <Typography variant="h3" className="!font-semibold tracking-tight group-data-[collapsible=icon]:hidden">
+                    Admin
+                </Typography>
             </SidebarHeader>
-            <SidebarContent className="md:mt-0 p-2">
+            <SidebarContent className="md:mt-0 px-2 py-1">
                 <SidebarMenu>
                     {items.map((item) => (
                         <SidebarMenuItem key={item.title}>
                             <SidebarMenuButton
                                 asChild
-                                className="[&>svg]:size-5 !data-[active=true]:bg-black[data-active=true] "
                                 isActive={isActive(item.url)}
+                                className="[&>svg]:size-4"
+                                tooltip={item.title}
                             >
-                                <Link href={`/${item.url}`} className="mb-2">
-                                    <item.icon
-                                        size={20}
-                                    // className={`text-3xl ${isActive(item.url) ? "text-white" : "text-black"
-                                    //     }`}
-                                    />
-                                    <Typography
-                                        variant="p"
-                                        className="!font-medium"
-                                    // className={`font-normal ${isActive(item.url) ? "text-white font-medium" : ""
-                                    //     }`}
-                                    >
+                                <Link href={`/${item.url}`} className="mb-1">
+                                    <item.icon className="size-4" />
+                                    <span className="text-sm group-data-[collapsible=icon]:hidden">
                                         {item.title}
-                                    </Typography>
+                                    </span>
                                 </Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                     ))}
                 </SidebarMenu>
             </SidebarContent>
-            <SidebarFooter>
-                <div className="flex gap-2 cursor-pointer">
-                    <Avatar className="w-16 h-16">
+            <SidebarSeparator className="mx-3" />
+            <SidebarFooter className="px-3 py-2">
+                <div className="flex items-center gap-2 truncate">
+                    <Avatar className="size-8">
                         <AvatarImage src="https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png" />
                         <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
-                    <div className="">
-                        <Typography variant="h3">{user?.name}</Typography>
-                        <Typography variant="p" className="text-xs">
+                    <div className="min-w-0 group-data-[collapsible=icon]:hidden">
+                        <Typography variant="h3" className="!text-sm !font-medium truncate">{user?.name}</Typography>
+                        <Typography variant="p" className="text-xs text-muted-foreground truncate">
                             {user?.email}
                         </Typography>
                     </div>

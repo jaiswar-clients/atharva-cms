@@ -82,7 +82,7 @@ const CreateCollegeModal = ({ open, onOpenChange }: IProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[600px] max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Create New College</DialogTitle>
         </DialogHeader>
@@ -180,11 +180,11 @@ const CreateCollegeModal = ({ open, onOpenChange }: IProps) => {
               )}
             />
 
-            <div className="flex justify-end gap-2 pt-4">
-              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button type="button" size="sm" variant="outline" onClick={() => onOpenChange(false)}>
                 Cancel
               </Button>
-              <Button type="submit" loading={{ isLoading: isLoading || uploading }}>
+              <Button type="submit" size="sm" loading={{ isLoading: isLoading || uploading }}>
                 Create College
               </Button>
             </div>

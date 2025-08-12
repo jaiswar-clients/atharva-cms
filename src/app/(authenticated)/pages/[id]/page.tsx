@@ -89,28 +89,28 @@ export default function PageEditor({ params }: { params: Promise<{ id: string }>
     }
 
     if (isLoading) {
-        return <div className="flex items-center justify-center h-screen">Loading...</div>
+        return <div className="text-sm text-muted-foreground">Loading...</div>
     }
 
     return (
-        <div className="container mx-auto py-8 space-y-8">
+        <div className="container mx-auto py-6 space-y-6">
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-2xl font-bold">{data?.data?.page}</CardTitle>
+                    <CardTitle className="text-xl font-semibold tracking-tight capitalize">{data?.data?.page}</CardTitle>
                     {!isEditing ? (
-                        <Button onClick={() => setIsEditing(true)}>
-                            <Edit className="mr-2 h-4 w-4" />
-                            Edit
+                        <Button onClick={() => setIsEditing(true)} size="sm" className="gap-2">
+                            <Edit className="h-4 w-4" />
+                            <span>Edit</span>
                         </Button>
                     ) : (
                         <div className="flex gap-2">
-                            <Button variant="outline" onClick={() => setIsEditing(false)}>
-                                <X className="mr-2 h-4 w-4" />
-                                Cancel
+                            <Button variant="outline" size="sm" className="gap-2" onClick={() => setIsEditing(false)}>
+                                <X className="h-4 w-4" />
+                                <span>Cancel</span>
                             </Button>
-                            <Button onClick={form.handleSubmit(onSubmit)} disabled={!form.formState.isDirty || updating}>
-                                <Check className="mr-2 h-4 w-4" />
-                                Update
+                            <Button onClick={form.handleSubmit(onSubmit)} size="sm" className="gap-2" disabled={!form.formState.isDirty || updating}>
+                                <Check className="h-4 w-4" />
+                                <span>Update</span>
                             </Button>
                         </div>
                     )}
@@ -118,7 +118,7 @@ export default function PageEditor({ params }: { params: Promise<{ id: string }>
             </Card>
 
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                     <CarouselSection
                         isEditing={isEditing}
                         carouselImages={carouselImages}

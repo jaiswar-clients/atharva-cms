@@ -183,7 +183,7 @@ export default function OrganizationsTable({
       </Dialog>
 
       <Dialog open={showOrderModal} onOpenChange={onSetShowOrderModal}>
-        <DialogContent className="max-w-2xl h-screen overflow-y-auto">
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Change College Order</DialogTitle>
             <DialogDescription>
@@ -195,7 +195,7 @@ export default function OrganizationsTable({
             <Droppable droppableId="colleges">
               {(provided) => (
                 <div
-                  className="space-y-4"
+                  className="space-y-3"
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                 >
@@ -209,9 +209,9 @@ export default function OrganizationsTable({
                         <div
                           ref={provided.innerRef}
                           {...provided.draggableProps}
-                          className={`flex items-center gap-4 p-4 border rounded-lg bg-white ${
-                            snapshot.isDragging ? "z-50 shadow-xl" : ""
-                          }`}
+                          className={`flex items-center gap-3 p-3 border rounded-lg bg-background ${
+                            snapshot.isDragging ? "z-50 shadow-md" : ""
+                          } transition-shadow`}
                           style={{
                             ...provided.draggableProps.style,
                             zIndex: snapshot.isDragging ? 9999 : "auto",
@@ -221,11 +221,11 @@ export default function OrganizationsTable({
                             {...provided.dragHandleProps}
                             className="cursor-grab"
                           >
-                            <GripVertical className="h-5 w-5 text-gray-400" />
+                            <GripVertical className="h-4 w-4 text-muted-foreground" />
                           </div>
-                          <span className="font-medium w-6">{index + 1}.</span>
+                          <span className="font-medium w-6 text-muted-foreground">{index + 1}.</span>
                           <span className="flex-1">{college.name}</span>
-                          <Badge className="bg-blue-100 text-blue-800 border-blue-200">
+                          <Badge variant="outline">
                             Position {index + 1}
                           </Badge>
                         </div>
@@ -238,7 +238,7 @@ export default function OrganizationsTable({
             </Droppable>
           </DragDropContext>
 
-          <DialogFooter className="mt-4">
+          <DialogFooter className="mt-2">
             <Button
               variant="outline"
               onClick={() => onSetShowOrderModal(false)}
@@ -247,7 +247,6 @@ export default function OrganizationsTable({
             </Button>
             <Button
               onClick={handleSaveOrder}
-              className="bg-blue-500 hover:bg-blue-600"
               disabled={isChangingOrder}
             >
               {isChangingOrder ? (
@@ -266,11 +265,11 @@ export default function OrganizationsTable({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">Logo</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Description</TableHead>
+            <TableHead className="w-[100px] text-muted-foreground">Logo</TableHead>
+            <TableHead className="text-muted-foreground">Name</TableHead>
+            <TableHead className="text-muted-foreground">Description</TableHead>
             <TableHead className="text-right">Created</TableHead>
-            <TableHead className="w-[100px]">Actions</TableHead>
+            <TableHead className="w-[100px] text-muted-foreground">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
