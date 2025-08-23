@@ -172,6 +172,61 @@ export interface ChangeCollegeOrderDto {
   colleges: CollegeOrderItem[];
 }
 
+export interface IFeedbackQuestion {
+  _id: string;
+  question_text: string;
+  category: string;
+  max_rating: number;
+  order: number;
+}
+
+export interface IFeedbackResponse {
+  _id: string;
+  respondent_name: string;
+  respondent_email: string;
+  submitted_at: Date;
+  answers: Array<{
+    question_id: string;
+    rating: number;
+  }>;
+}
+
+export interface IFeedback {
+  _id: string;
+  title: string;
+  description?: string;
+  is_active: boolean;
+  questions: IFeedbackQuestion[];
+  responses: IFeedbackResponse[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateFeedbackQuestionDto {
+  question_text: string;
+  max_rating: number;
+  category: string;
+  order: number;
+}
+
+export interface CreateFeedbackDto {
+  title: string;
+  description?: string;
+  is_active?: boolean;
+  questions: CreateFeedbackQuestionDto[];
+}
+
+export interface SubmitFeedbackResponseDto {
+  respondent_name: string;
+  respondent_email: string;
+  answers: Array<{
+    question_id: string;
+    rating: number;
+  }>;
+}
+
+export type UpdateFeedbackDto = Partial<CreateFeedbackDto>;
+
 export interface CreateFestivalDto {
   name: string;
   description: string;
@@ -238,6 +293,8 @@ export const collegeApi = createApi({
     "SINGLE_JOURNEY",
     "News",
     "SINGLE_NEWS",
+    "Feedback",
+    "SINGLE_FEEDBACK",
   ],
   endpoints: (builder) => ({
     getColleges: builder.query<IResponse<ICollege[]>, void>({
@@ -621,7 +678,10 @@ export const collegeApi = createApi({
       }),
       providesTags: ["SINGLE_NEWS"],
     }),
-    createNews: builder.mutation<IResponse<INews>, { name: string; image_url?: string; link: string }>({
+    createNews: builder.mutation<
+      IResponse<INews>,
+      { name: string; image_url?: string; link: string }
+    >({
       query: (data) => ({
         url: "/news",
         method: HTTP.POST,
@@ -629,7 +689,13 @@ export const collegeApi = createApi({
       }),
       invalidatesTags: ["News"],
     }),
-    updateNews: builder.mutation<IResponse<INews>, { id: string; data: Partial<{ name: string; image_url?: string; link: string }> }>({
+    updateNews: builder.mutation<
+      IResponse<INews>,
+      {
+        id: string;
+        data: Partial<{ name: string; image_url?: string; link: string }>;
+      }
+    >({
       query: ({ id, data }) => ({
         url: `/news/${id}`,
         method: HTTP.PATCH,
@@ -644,6 +710,67 @@ export const collegeApi = createApi({
       }),
       invalidatesTags: ["News", "SINGLE_NEWS"],
     }),
+    // Feedback endpoints
+    getFeedbackForms: builder.query<IResponse<IFeedback[]>, void>({
+      query: () => ({
+        url: "/feedback",
+        method: HTTP.GET,
+      }),
+      providesTags: ["Feedback"],
+    }),
+    getFeedbackFormById: builder.query<IResponse<IFeedback>, string>({
+      query: (id) => ({
+        url: `/feedback/${id}`,
+        method: HTTP.GET,
+      }),
+      providesTags: ["SINGLE_FEEDBACK"],
+    }),
+    // Add the latest active feedback form endpoint
+    getLatestActiveFeedbackForm: builder.query<IResponse<IFeedback>, void>({
+      query: () => ({
+        url: "/feedback/latest-active-form",
+        method: HTTP.GET,
+      }),
+      providesTags: ["SINGLE_FEEDBACK"],
+    }),
+    createFeedbackForm: builder.mutation<
+      IResponse<IFeedback>,
+      CreateFeedbackDto
+    >({
+      query: (data) => ({
+        url: "/feedback",
+        method: HTTP.POST,
+        body: data,
+      }),
+      invalidatesTags: ["Feedback"],
+    }),
+    updateFeedbackForm: builder.mutation<
+      IResponse<IFeedback>,
+      { id: string; data: UpdateFeedbackDto }
+    >({
+      query: ({ id, data }) => ({
+        url: `/feedback/${id}`,
+        method: HTTP.PATCH,
+        body: data,
+      }),
+      invalidatesTags: ["Feedback", "SINGLE_FEEDBACK"],
+    }),
+    deleteFeedbackForm: builder.mutation<IResponse, string>({
+      query: (id) => ({
+        url: `/feedback/${id}`,
+        method: HTTP.DELETE,
+      }),
+      invalidatesTags: ["Feedback", "SINGLE_FEEDBACK"],
+    }),
+    getFeedbackResponses: builder.query<IResponse<IFeedbackResponse[]>, string>(
+      {
+        query: (feedbackFormId) => ({
+          url: `/feedback/${feedbackFormId}/responses`,
+          method: HTTP.GET,
+        }),
+        providesTags: ["SINGLE_FEEDBACK"],
+      }
+    ),
   }),
 });
 
@@ -693,4 +820,13 @@ export const {
   useCreateNewsMutation,
   useUpdateNewsMutation,
   useDeleteNewsMutation,
+  // Feedback hooks
+  useGetFeedbackFormsQuery,
+  useGetFeedbackFormByIdQuery,
+  useGetLatestActiveFeedbackFormQuery,
+  useCreateFeedbackFormMutation,
+  useUpdateFeedbackFormMutation,
+  useDeleteFeedbackFormMutation,
+
+  useGetFeedbackResponsesQuery,
 } = collegeApi;
